@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sejal Nagori × Mastercard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --mc-red: #EB001B;
+    --mc-orange: #F79E1B;
+    --mc-dark: #0A0A0A;
+    --mc-mid: #1A1A1A;
+    --mc-surface: #141414;
+    --mc-text: #F5F0E8;
+    --mc-muted: #888880;
+    --mc-accent: #F79E1B;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--mc-dark);
+    color: var(--mc-text);
+    font-family: var(--sans);
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--mc-orange);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease, opacity 0.2s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(247,158,27,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.35s cubic-bezier(0.23,1,0.32,1);
+  }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 2rem 4rem;
+  }
+
+  .mc-circles {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px; height: 700px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.07;
+  }
+  .mc-circles .c1 {
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: var(--mc-red);
+    top: 50%; left: 30%;
+    transform: translate(-50%, -50%);
+  }
+  .mc-circles .c2 {
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: var(--mc-orange);
+    top: 50%; left: 70%;
+    transform: translate(-50%, -50%);
+  }
+
+  .hero-eyebrow {
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--mc-muted);
+    margin-bottom: 2rem;
+    position: relative; z-index: 1;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .hero-name {
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 900;
+    line-height: 0.95;
+    text-align: center;
+    position: relative; z-index: 1;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.4s forwards;
+  }
+
+  .hero-name .accent {
+    background: linear-gradient(90deg, var(--mc-red), var(--mc-orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-tagline {
+    font-family: var(--sans);
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    font-weight: 300;
+    color: var(--mc-muted);
+    text-align: center;
+    margin-top: 1.5rem;
+    max-width: 520px;
+    line-height: 1.7;
+    position: relative; z-index: 1;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.6s forwards;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 3rem;
+    position: relative; z-index: 1;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.8s forwards;
+  }
+
+  .btn {
+    padding: 0.75rem 2rem;
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 100px;
+    transition: all 0.25s ease;
+    cursor: none;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--mc-red), var(--mc-orange));
+    color: white;
+    border: none;
+  }
+  .btn-primary:hover { transform: translateY(-2px); opacity: 0.9; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--mc-text);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .btn-ghost:hover { border-color: var(--mc-orange); color: var(--mc-orange); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--mc-muted);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.2s forwards;
+  }
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--mc-orange), transparent);
+    animation: scrollPulse 2s ease infinite;
+  }
+
+  /* ─── SECTIONS ─── */
+  section { padding: 6rem 2rem; position: relative; }
+
+  .container { max-width: 900px; margin: 0 auto; }
+
+  .section-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--mc-orange);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ─── WHY MASTERCARD ─── */
+  #why { background: var(--mc-surface); }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-top: 3rem;
+  }
+
+  .why-card {
+    background: var(--mc-surface);
+    padding: 2.5rem;
+    transition: background 0.3s ease;
+    cursor: none;
+  }
+  .why-card:hover { background: #1e1e1e; }
+  .why-card:hover .why-icon { color: var(--mc-orange); }
+
+  .why-icon {
+    font-size: 1.8rem;
+    margin-bottom: 1.2rem;
+    display: block;
+    transition: color 0.3s ease;
+    color: var(--mc-muted);
+  }
+
+  .why-card h3 {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.7rem;
+    color: var(--mc-text);
+  }
+
+  .why-card p {
+    font-size: 0.875rem;
+    line-height: 1.75;
+    color: var(--mc-muted);
+  }
+
+  /* ─── LETTER ─── */
+  #letter { background: var(--mc-dark); }
+
+  .letter-body {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .letter-para {
+    font-size: 1rem;
+    line-height: 1.9;
+    color: #c8c4bc;
+    margin-bottom: 1.8rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .letter-para.visible { opacity: 1; transform: translateY(0); }
+
+  .letter-para strong {
+    color: var(--mc-text);
+    font-weight: 500;
+  }
+
+  .letter-highlight {
+    border-left: 2px solid var(--mc-orange);
+    padding-left: 1.5rem;
+    margin: 2.5rem 0;
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--mc-text);
+    line-height: 1.6;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s;
+  }
+  .letter-highlight.visible { opacity: 1; transform: translateX(0); }
+
+  /* ─── METRICS ─── */
+  #metrics { background: var(--mc-surface); }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-top: 3rem;
+  }
+
+  .metric-card {
+    background: var(--mc-surface);
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: background 0.3s;
+    cursor: none;
+  }
+  .metric-card:hover { background: #1e1e1e; }
+
+  .metric-num {
+    font-family: var(--serif);
+    font-size: 3rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--mc-red), var(--mc-orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    animation: countUp 0.5s ease forwards;
+  }
+
+  .metric-label {
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    color: var(--mc-muted);
+    line-height: 1.5;
+  }
+
+  /* ─── SKILLS ─── */
+  #skills { background: var(--mc-dark); }
+
+  .skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+  }
+
+  .skill-tag {
+    padding: 0.55rem 1.2rem;
+    font-size: 0.78rem;
+    font-weight: 400;
+    border-radius: 100px;
+    letter-spacing: 0.03em;
+    transition: all 0.25s ease;
+    cursor: none;
+  }
+  .skill-tag.primary {
+    background: rgba(235,0,27,0.12);
+    border: 1px solid rgba(235,0,27,0.25);
+    color: #f88;
+  }
+  .skill-tag.secondary {
+    background: rgba(247,158,27,0.1);
+    border: 1px solid rgba(247,158,27,0.2);
+    color: #e8b96a;
+  }
+  .skill-tag.tertiary {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--mc-muted);
+  }
+  .skill-tag:hover { transform: translateY(-2px); border-color: var(--mc-orange); color: var(--mc-orange); }
+
+  /* ─── FOOTER / CTA ─── */
+  #cta {
+    background: var(--mc-surface);
+    text-align: center;
+    padding: 7rem 2rem;
+  }
+
+  .cta-circles {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem;
+    position: relative;
+    height: 80px;
+    align-items: center;
+  }
+
+  .cta-c1 {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: var(--mc-red);
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+    right: -18px;
+  }
+  .cta-c2 {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: var(--mc-orange);
+    opacity: 0.9;
+    position: relative;
+    z-index: 2;
+    left: -18px;
+  }
+
+  .cta-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .cta-sub {
+    font-size: 0.95rem;
+    color: var(--mc-muted);
+    margin-bottom: 3rem;
+    line-height: 1.7;
+  }
+
+  .contact-row {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    color: var(--mc-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: none;
+  }
+  .contact-item:hover { color: var(--mc-orange); }
+  .contact-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--mc-orange); display: inline-block; }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    width: 48px; height: 2px;
+    background: linear-gradient(to right, var(--mc-red), var(--mc-orange));
+    margin-bottom: 2rem;
+    border-radius: 2px;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.25rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--mc-text);
+    text-decoration: none;
+    cursor: none;
+  }
+  .nav-logo span { color: var(--mc-orange); }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mc-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: none;
+  }
+  .nav-links a:hover { color: var(--mc-orange); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  @keyframes countUp {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ─── PROGRESS BAR ─── */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--mc-red), var(--mc-orange));
+    z-index: 200;
+    transition: width 0.1s ease;
+  }
+
+  @media (max-width: 640px) {
+    .why-grid { grid-template-columns: 1fr; }
+    .metrics-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">Sejal <span>×</span> Mastercard</a>
+  <ul class="nav-links">
+    <li><a href="#why">Why Mastercard</a></li>
+    <li><a href="#letter">My Letter</a></li>
+    <li><a href="#metrics">Impact</a></li>
+    <li><a href="#cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="mc-circles"><div class="c1"></div><div class="c2"></div></div>
+  <p class="hero-eyebrow">Application · Analyst, Business Process Improvement</p>
+  <h1 class="hero-name">
+    Sejal<br>
+    <span class="accent">Nagori</span>
+  </h1>
+  <p class="hero-tagline">MSc Finance, Trinity College Dublin · Process-driven, detail-obsessed, ready to help Mastercard move smarter.</p>
+  <div class="hero-cta">
+    <a href="#letter" class="btn btn-primary">Read My Letter</a>
+    <a href="#metrics" class="btn btn-ghost">See My Impact</a>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- WHY MASTERCARD -->
+<section id="why">
+  <div class="container">
+    <p class="section-label">Why Mastercard</p>
+    <div class="divider"></div>
+    <h2 class="section-title">Four reasons this is the<br>only role I want.</h2>
+    <div class="why-grid">
+      <div class="why-card">
+        <span class="why-icon">⬡</span>
+        <h3>Scale that matters</h3>
+        <p>Supporting a 150+ person team at a company operating in 200+ countries means every process I improve has exponential downstream impact. That is not a small thing — and I do not treat it as one.</p>
+      </div>
+      <div class="why-card">
+        <span class="why-icon">◈</span>
+        <h3>Mission I believe in</h3>
+        <p>Powering economies and empowering people is not corporate language to me. Having grown up across India and Ireland, I have seen what access to reliable financial infrastructure actually means for people's lives.</p>
+      </div>
+      <div class="why-card">
+        <span class="why-icon">◎</span>
+        <h3>The work fits precisely</h3>
+        <p>Tracking initiatives, documenting processes, preparing briefings for senior leaders, improving how large teams coordinate — this is not adjacent to what I have done. It is exactly what I have done.</p>
+      </div>
+      <div class="why-card">
+        <span class="why-icon">◉</span>
+        <h3>Room to grow</h3>
+        <p>This role builds foundational capability in operations and continuous improvement within an organisation that values innovation. That is a runway, not a ceiling — and I intend to use it fully.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LETTER -->
+<section id="letter">
+  <div class="container">
+    <p class="section-label">Cover Letter</p>
+    <div class="divider"></div>
+    <h2 class="section-title">In my own words.</h2>
+    <div class="letter-body">
+
+      <p class="letter-para">Dear Hiring Manager,</p>
+
+      <div class="letter-highlight">
+        "The best process is not the fastest one — it is the one everyone actually follows."
+      </div>
+
+      <p class="letter-para">
+        Mastercard's mission — to power economies and empower people — is not a tagline; it is a blueprint for what technology-enabled infrastructure can achieve at scale. The chance to contribute to that mission from within, specifically by helping a <strong>150+ person organisation</strong> operate more efficiently and communicate more clearly, is exactly the kind of role I have been building towards.
+      </p>
+
+      <p class="letter-para">
+        In my role as a <strong>Buy-Side Research and Investment Analyst at TresVista</strong>, I managed <strong>120+ concurrent analytical mandates</strong> for institutional clients across private equity, hedge funds, and asset managers. Behind those mandates was a system: initiative trackers, structured workflows, status dashboards, briefing documents, and meeting actions — all maintained to the standard that senior clients expected, on <strong>2-day turnaround timelines</strong>. That discipline — accurate capture, clear communication, consistent follow-through — is the core of what this role demands. I have lived it under pressure.
+      </p>
+
+      <p class="letter-para">
+        As <strong>Co-Founder of SAVIC Jewellery</strong>, I built the operational backbone of a growing business from scratch. I designed MIS dashboards, owned budget versus actuals reporting, coordinated a <strong>10+ vendor network</strong>, and implemented process improvements that reduced invoice processing time by <strong>7 days</strong>, improved operating margins by <strong>20%</strong>, and cut receivables by <strong>35%</strong>. These were not inherited systems. They were designed, tested, and refined — exactly the kind of incremental, data-driven improvement Mastercard's Process Improvement mandate calls for.
+      </p>
+
+      <p class="letter-para">
+        I am proficient in <strong>Microsoft Excel, PowerPoint, Teams, SharePoint, and Power BI</strong>. I hold an <strong>MSc Finance from Trinity College Dublin</strong> and a First Class BBA from Christ University. I am based full-time in Dublin and available to contribute from day one.
+      </p>
+
+      <p class="letter-para">
+        What motivates me most about this role is its dual nature — structured enough to demand precision, open enough to reward initiative. I am organised, detail-oriented, and energised by the challenge of making large teams work better. I would be proud to help Mastercard's operations team do exactly that.
+      </p>
+
+      <p class="letter-para">
+        Thank you sincerely for your time and consideration. I would welcome the opportunity to speak further.
+      </p>
+
+      <p class="letter-para" style="margin-top: 2.5rem;">
+        Yours sincerely,<br>
+        <strong style="font-family: 'Playfair Display', serif; font-size: 1.3rem; display: block; margin-top: 0.75rem;">Sejal Manish Nagori</strong>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<section id="metrics">
+  <div class="container">
+    <p class="section-label">Impact by Numbers</p>
+    <div class="divider"></div>
+    <h2 class="section-title">What I deliver.</h2>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <span class="metric-num">120+</span>
+        <p class="metric-label">Concurrent mandates<br>managed at TresVista</p>
+      </div>
+      <div class="metric-card">
+        <span class="metric-num">35%</span>
+        <p class="metric-label">Reduction in outstanding<br>receivables at SAVIC</p>
+      </div>
+      <div class="metric-card">
+        <span class="metric-num">20%</span>
+        <p class="metric-label">Improvement in<br>operating margins</p>
+      </div>
+      <div class="metric-card">
+        <span class="metric-num">40%</span>
+        <p class="metric-label">Cost variances identified<br>via budget analysis</p>
+      </div>
+      <div class="metric-card">
+        <span class="metric-num">7</span>
+        <p class="metric-label">Days cut from invoice<br>processing cycle</p>
+      </div>
+      <div class="metric-card">
+        <span class="metric-num">2</span>
+        <p class="metric-label">Day turnaround on<br>institutional deliverables</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <p class="section-label">What I Bring</p>
+    <div class="divider"></div>
+    <h2 class="section-title">Skills aligned to this role.</h2>
+    <div class="skills-list">
+      <span class="skill-tag primary">Process Documentation</span>
+      <span class="skill-tag primary">KPI Tracking</span>
+      <span class="skill-tag primary">MIS Reporting</span>
+      <span class="skill-tag primary">Initiative Dashboards</span>
+      <span class="skill-tag secondary">Microsoft Excel (Advanced)</span>
+      <span class="skill-tag secondary">PowerPoint</span>
+      <span class="skill-tag secondary">Microsoft Teams</span>
+      <span class="skill-tag secondary">SharePoint</span>
+      <span class="skill-tag secondary">Power BI</span>
+      <span class="skill-tag tertiary">Multi-stakeholder Coordination</span>
+      <span class="skill-tag tertiary">Meeting Facilitation</span>
+      <span class="skill-tag tertiary">Action Tracking</span>
+      <span class="skill-tag tertiary">Briefing Preparation</span>
+      <span class="skill-tag tertiary">Continuous Improvement</span>
+      <span class="skill-tag tertiary">Bloomberg Terminal</span>
+      <span class="skill-tag tertiary">Financial Modelling</span>
+      <span class="skill-tag tertiary">MySQL</span>
+      <span class="skill-tag tertiary">Python</span>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="container">
+    <div class="cta-circles">
+      <div class="cta-c1"></div>
+      <div class="cta-c2"></div>
+    </div>
+    <h2 class="cta-title">Let's build something<br>that works.</h2>
+    <p class="cta-sub">MSc Finance · Trinity College Dublin · Dublin, Ireland<br>Available immediately · Full-time · Hybrid ready</p>
+    <div class="hero-cta" style="justify-content: center;">
+      <a href="mailto:sejalmn.nagori@gmail.com" class="btn btn-primary">sejalmn.nagori@gmail.com</a>
+    </div>
+    <div class="contact-row">
+      <a href="tel:+35308998830791" class="contact-item">
+        <span class="contact-dot"></span>
+        +353 0899 883 791
+      </a>
+      <a href="https://www.linkedin.com/in/nagori-sejal" class="contact-item">
+        <span class="contact-dot"></span>
+        linkedin.com/in/nagori-sejal
+      </a>
+      <a href="https://github.com/nagoriSej" class="contact-item">
+        <span class="contact-dot"></span>
+        github.com/nagoriSej
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  const bar = document.getElementById('progressBar');
+
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.transform = `translate(${mx - 6}px, ${my - 6}px)`;
+  });
+
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.transform = `translate(${rx - 18}px, ${ry - 18}px)`;
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  window.addEventListener('scroll', () => {
+    const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    bar.style.width = pct + '%';
+  });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.letter-para, .letter-highlight').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
